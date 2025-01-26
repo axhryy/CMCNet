@@ -1,5 +1,3 @@
-<!-- # WTConv
-
 # CMCNet: Enhancing Face Image Super-Resolution through CNN-Mamba Collaboration
 
 [Shahaf E. Finder](https://shahaffind.github.io/), [Roy Amoyal](https://www.linkedin.com/in/roy-amoyal/), [Eran Treister](https://www.cs.bgu.ac.il/~erant/), and [Oren Freifeld](https://www.cs.bgu.ac.il/~orenfr/)
@@ -20,7 +18,7 @@ class="center">
 </details>
 
 ### Requirements
-- Python 3.12
+- Python 3.9
 - timm 1.0.7
 - PyWavelets 1.6.0
 
@@ -180,4 +178,3 @@ If you find this repository helpful, please consider citing:
   year      = {2024},
 }
 ```
-
