@@ -1,6 +1,6 @@
 <!-- # WTConv
-## Wavelet Convolutions for Large Receptive Fields. ECCV 2024. -->
-# Wavelet Convolutions for Large Receptive Fields [ECCV 2024]
+
+# CMCNet: Enhancing Face Image Super-Resolution through CNN-Mamba Collaboration
 
 [Shahaf E. Finder](https://shahaffind.github.io/), [Roy Amoyal](https://www.linkedin.com/in/roy-amoyal/), [Eran Treister](https://www.cs.bgu.ac.il/~erant/), and [Oren Freifeld](https://www.cs.bgu.ac.il/~orenfr/)
 
