@@ -25,8 +25,10 @@ python train.py --gpus 1 --name wfen --model wfen \
     --Gnorm "bn" --lr 0.0002 --beta1 0.9 --scale_factor 8 --load_size 128 \
     --dataroot /path/to/datasets/CelebA --dataset_name celeba --batch_size 10 --total_epochs 20 \
     --visual_freq 100 --print_freq 50 --save_latest_freq 1000
-### Test with Pretrained Models
+```
 
+
+### Test with Pretrained Models
 ```
 # On CelebA Test set
 python test.py --gpus 1 --model CMCNet --name CMCNET \
@@ -43,7 +45,6 @@ python test.py --gpus 1 --model wfen --name wfen \
     --save_as_dir results_helen/cmcnet
 ```
 
-```
 ## Acknowledgements
 This code is built on [Face-SPARNet](https://github.com/chaofengc/Face-SPARNet). We thank the authors for sharing their codes.
 
