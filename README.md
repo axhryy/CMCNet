@@ -7,7 +7,7 @@ I have trained and tested the codes on
 - Python 3.8
 
 ### test results
-**test results** can be downloaded from [Google Drive](https://drive.google.com/drive/folders/1sJs2JYqddSk1o4hksOrO2Fk2ciRelXUQ) .
+**test results** can be downloaded from [Google Drive](https://drive.google.com/file/d/1jOKgi9L96FAMgRxAFnrMPK5mm85V0UK7/view?usp=sharing) .
 
 ### Train the Model
 The commands used to train the released models are provided in script `train.sh`. Here are some train tips:
