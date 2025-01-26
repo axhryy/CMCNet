@@ -3,7 +3,7 @@
 ## Installation and Requirements 
 I have trained and tested the codes on
 - Ubuntu 20.04
-- CUDA 11.1  
+- CUDA 11.8  
 - Python 3.8
 
 ### Pretrained models and test results
