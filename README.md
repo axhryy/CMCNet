@@ -4,7 +4,7 @@
 I have trained and tested the codes on
 - Ubuntu 20.04
 - CUDA 11.1  
-- Python 3.8, install required packages by `pip install -r requirements.txt`
+- Python 3.8
 
 ## Getting Started
 Download Our Pretrain Models and Test Dataset. Additionally, we offer our FSR results in orginal paper.
