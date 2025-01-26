@@ -18,9 +18,9 @@ The commands used to train the released models are provided in script `train.sh`
 
 ```
 # Train Code
-python train.py --gpus 1 --name wfen --model wfen \
+python train.py --gpus 1 --name CMCNET --model cmcnet \
     --Gnorm "bn" --lr 0.0002 --beta1 0.9 --scale_factor 8 --load_size 128 \
-    --dataroot /path/to/datasets/CelebA --dataset_name celeba --batch_size 10 --total_epochs 20 \
+    --dataroot /CelebA --dataset_name celeba --batch_size 10 --total_epochs 20 \
     --visual_freq 100 --print_freq 50 --save_latest_freq 1000
 ```
 
@@ -28,17 +28,17 @@ python train.py --gpus 1 --name wfen --model wfen \
 ### Test with Pretrained Models
 ```
 # On CelebAx8 Test set
-python test.py --gpus 1 --model CMCNet --name CMCNET \
+python test.py --gpus 1 --model cmcnet --name CMCNET \
     --load_size 128 --dataset_name single --dataroot /Test_Celeba \
-    --pretrain_model_path ./pretrain_models/wfen/wfen_best.pth \
+    --pretrain_model_path ./checkpoints/CMCNET/.ph \
     --save_as_dir results_celeba/cmcnet
 ```
 
 ```
 # On Helenx8 Test set
-python test.py --gpus 1 --model wfen --name CMCNET \
+python test.py --gpus 1 --model cmcnet --name CMCNET \
     --load_size 128 --dataset_name single --dataroot /Test_Helen\
-    --pretrain_model_path ./pretrain_models/wfen/wfen_best.pth \
+    --pretrain_model_path ./checkpoints/CMCNET/.ph \
     --save_as_dir results_helen/cmcnet
 ```
 
