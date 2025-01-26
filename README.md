@@ -6,8 +6,8 @@ I have trained and tested the codes on
 - CUDA 11.1  
 - Python 3.8
 
-### test results
-**test results** can be downloaded from [Google Drive](https://drive.google.com/file/d/1jOKgi9L96FAMgRxAFnrMPK5mm85V0UK7/view?usp=drive_link).
+### Pretrained models and test results
+The **pretrained models** and **test results** can be downloaded from [Google Drive](https://drive.google.com/file/d/1jOKgi9L96FAMgRxAFnrMPK5mm85V0UK7/view?usp=drive_link).
 
 ### Train the Model
 The commands used to train the released models are provided in script `train.sh`. Here are some train tips:
