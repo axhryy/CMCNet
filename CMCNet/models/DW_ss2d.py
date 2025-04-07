@@ -14,13 +14,6 @@ try:
 except:
     pass
 
-# an alternative for mamba_ssm (in which causal_conv1d is needed)
-# try:
-#     from selective_scan import selective_scan_fn as selective_scan_fn_v1
-#     from selective_scan import selective_scan_ref as selective_scan_ref_v1
-# except:
-#     pass
-
 DropPath.__repr__ = lambda self: f"timm.DropPath({self.drop_prob})"
 
 
@@ -456,11 +449,9 @@ class SS2D(nn.Module):
         y = y1 + y2 + y3 + y4
         y = torch.transpose(y, dim0=1, dim1=2).contiguous().view(B, H, W, -1)
         #添加通道注意力减少通道之间的冗余
-        # y = torch.transpose(y, dim0=1, dim1=2).contiguous().view(B, -1, H,W)
         y=y.permute(0, 3, 1, 2).contiguous()
         y=self.ca(y)
         y=y.permute(0, 2, 3, 1).contiguous()
-        # y = y.permute(0, 2, 3, 1).contiguous()
         y = self.out_norm(y)
         y = y * F.silu(z)
         out = self.out_proj(y)
