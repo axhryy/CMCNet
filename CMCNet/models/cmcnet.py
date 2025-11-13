@@ -1106,15 +1106,7 @@ class fusion_Attention(nn.Module):
         return out
 
 class DCFM(nn.Module):
-    r""" Hybrid Fusion Block.
 
-    Args:
-        dim (int): Number of input channels.
-        num_heads (int): Number of attention heads.
-        ffn_expansion_factor (int): Define the window size.
-        bias (int): Shift size for SW-MSA.
-        LayerNorm_type (float): Ratio of mlp hidden dim to embedding dim.
-    """
     def __init__(self, dim, num_heads, ffn_expansion_factor, bias, LayerNorm_type):
         super(DCFM, self).__init__()
 
