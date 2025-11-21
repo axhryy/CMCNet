@@ -21,7 +21,7 @@ The commands used to train the released models are provided in script `train.sh`
 python train.py --gpus 1 --name CMCNET --model cmcnet \
     --Gnorm "bn" --lr 0.0002 --beta1 0.9 --scale_factor 8 --load_size 128 \
     --dataroot /CelebA --dataset_name celeba --batch_size 10 --total_epochs 20 \
-    --visual_freq 100 --print_freq 50 --save_latest_freq 1000
+    --visual_freq 20 --print_freq 50 --save_latest_freq 1000
 ```
 
 
