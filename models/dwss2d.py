@@ -1,16 +1,11 @@
-import time
 import math
-from functools import partial
-from typing import Optional, Callable
-
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import torch.utils.checkpoint as checkpoint
 from einops import rearrange, repeat
-from timm.models.layers import DropPath, to_2tuple, trunc_normal_
+from timm.models.layers import DropPath
 try:
-    from mamba_ssm.ops.selective_scan_interface import selective_scan_fn, selective_scan_ref
+    from mamba_ssm.ops.selective_scan_interface import selective_scan_fn
 except:
     pass
 
@@ -32,21 +27,19 @@ def flops_selective_scan_ref(B=1, L=256, D=768, N=16, with_D=True, with_Z=False,
         [.float(), +, .softplus, .shape, new_zeros, repeat, stack, to(dtype), silu] 
     """
     import numpy as np
-    
-    # fvcore.nn.jit_handles
+ 
     def get_flops_einsum(input_shapes, equation):
         np_arrs = [np.zeros(s) for s in input_shapes]
         optim = np.einsum_path(equation, *np_arrs, optimize="optimal")[1]
         for line in optim.split("\n"):
             if "optimized flop" in line.lower():
-                # divided by 2 because we count MAC (multiply-add counted as one flop)
                 flop = float(np.floor(float(line.split(":")[-1]) / 2))
                 return flop
     
 
     assert not with_complex
 
-    flops = 0 # below code flops = 0
+    flops = 0 
     if False:
         ...
         """
@@ -251,8 +244,8 @@ class CALayer(nn.Module):
 
     def forward(self, x):
 
-        y = self.avg_pool(x)  # (1,64,1,1)
-        y = self.conv_du(y)  # (1,64,1,1)
+        y = self.avg_pool(x)  
+        y = self.conv_du(y)  
         return x * y
 
 class SS2D(nn.Module):
@@ -260,7 +253,6 @@ class SS2D(nn.Module):
         self,
         d_model,
         d_state=16,
-        # d_state="auto", # 20240109
         d_conv=3,
         expand=2,
         dt_rank="auto",
@@ -280,7 +272,6 @@ class SS2D(nn.Module):
         super().__init__()
         self.d_model = d_model
         self.d_state = d_state
-        # self.d_state = math.ceil(self.d_model / 6) if d_state == "auto" else d_model # 20240109
         self.d_conv = d_conv
         self.expand = expand
         self.d_inner = int(self.expand * self.d_model)
@@ -334,11 +325,10 @@ class SS2D(nn.Module):
         self.dropout = nn.Dropout(dropout) if dropout > 0. else None
 
     @staticmethod
-    #函数 dt_init 在这里显然是为了初始化一个神经网络中的线性变换层（nn.Linear），并根据特定的初始化策略来设置其权重。
+    #函数dt_init在这里显然是为了初始化一个神经网络中的线性变换层（nn.Linear），并根据特定的初始化策略来设置其权重。
     def dt_init(dt_rank, d_inner, dt_scale=1.0, dt_init="random", dt_min=0.001, dt_max=0.1, dt_init_floor=1e-4, **factory_kwargs):
         dt_proj = nn.Linear(dt_rank, d_inner, bias=True, **factory_kwargs)
 
-        # Initialize special dt projection to preserve variance at initialization
         dt_init_std = dt_rank**-0.5 * dt_scale
         if dt_init == "constant":
             nn.init.constant_(dt_proj.weight, dt_init_std)
@@ -346,23 +336,19 @@ class SS2D(nn.Module):
             nn.init.uniform_(dt_proj.weight, -dt_init_std, dt_init_std)
         else:
             raise NotImplementedError
-
-        # Initialize dt bias so that F.softplus(dt_bias) is between dt_min and dt_max
         dt = torch.exp(
             torch.rand(d_inner, **factory_kwargs) * (math.log(dt_max) - math.log(dt_min))
             + math.log(dt_min)
         ).clamp(min=dt_init_floor)
-        # Inverse of softplus: https://github.com/pytorch/pytorch/issues/72759
         inv_dt = dt + torch.log(-torch.expm1(-dt))
         with torch.no_grad():
             dt_proj.bias.copy_(inv_dt)
-        # Our initialization would set all Linear.bias to zero, need to mark this one as _no_reinit
         dt_proj.bias._no_reinit = True
         
         return dt_proj
 
     @staticmethod
-    #这段代码定义了一个名为 A_log_init 的Python函数，其主要目的是初始化一个特殊的对数权重矩阵 A_log。
+    #这段代码定义了一个名为A_log_init的Python函数，其主要目的是初始化一个特殊的对数权重矩阵 A_log。
     def A_log_init(d_state, d_inner, copies=1, device=None, merge=True):
         # S4D real initialization
         A = repeat(
@@ -399,7 +385,6 @@ class SS2D(nn.Module):
         K = 4
 
         x_hwwh = torch.stack([x.view(B, -1, L), torch.transpose(x, dim0=2, dim1=3).contiguous().view(B, -1, L)], dim=1).view(B, 2, -1, L)
-
         #torch.flip 的作用是将指定维度的元素顺序反转。例如，若 x_hwwh 是一个一维数组 [1, 2, 3, 4]，则 torch.flip(x_hwwh, dims=[-1]) 的结果将是 [4, 3, 2, 1]。
         xs = torch.cat([x_hwwh, torch.flip(x_hwwh, dims=[-1])], dim=1) # (b, k, d, l)
         #这个 torch.einsum 操作执行了一个具体的张量乘法和求和运算，可以理解为对每个 b 和 k，在维度 d 上对 xs 的第四维 l 进行加权求和，权重由 self.x_proj_weight 提供。
@@ -432,19 +417,18 @@ class SS2D(nn.Module):
 
         return out_y[:, 0], inv_y[:, 0], wh_y, invwh_y
 
+
     def forward(self, x: torch.Tensor, **kwargs):
         B, H, W, C = x.shape
         xz = self.in_proj(x)
-        x, z = xz.chunk(2, dim=-1) # (b, h, w, d)
-
+        x, z = xz.chunk(2, dim=-1) 
         x = x.permute(0, 3, 1, 2).contiguous()
         x1=self.dconv_3(x)
         x2=self.dconv_5(x)
         x3=self.dconv_7(x)
         x=torch.cat([x1,x2,x3],dim=1)
         x = self.act(self.conv_1(x))
-        # x = self.act(self.conv2d(x)) # (b, d, h, w)
-        y1, y2, y3, y4 = self.forward_core(x)#(c=192)
+        y1, y2, y3, y4 = self.forward_core(x)
         assert y1.dtype == torch.float32
         y = y1 + y2 + y3 + y4
         y = torch.transpose(y, dim0=1, dim1=2).contiguous().view(B, H, W, -1)

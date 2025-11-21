@@ -3,7 +3,6 @@ import numpy as np
 import os
 
 def im2col(img, k, stride=1):
-    # Parameters
     m, n = img.shape
     s0, s1 = img.strides
     nrows = m - k + 1
@@ -178,8 +177,8 @@ def vif(img_ref, img_dist, wavelet='steerable', full=False):
         return np.mean(nums + 1e-4)/np.mean(dens + 1e-4), (nums + 1e-4), (dens + 1e-4)
 
 if __name__=="__main__":
-    HR_path =  "/root/autodl-fs/CTCNet-main/image_origin/Helen_HR/" # CelebA1000  Helen50
-    SR_path =  "/root/autodl-fs/CTCNet-main/result/Helen_x4_LR/" # results_CelebA  results_helen
+    HR_path =  "image_origin/Helen_HR/" # CelebA1000  Helen50
+    SR_path =  "result/1_1_1_helen/" # results_CelebA  results_helen
     fileList = os.listdir(HR_path)
     sum = 0
     count = 0

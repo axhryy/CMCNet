@@ -3,9 +3,9 @@ import os
 import lpips
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument('--dir0', type=str,
-                    default="/root/autodl-fs/CTCNet-main/image_origin/Helen_HR")  # Helen50 CelebA1000
+                    default="image_origin/Celeba_HR")  # Helen50 CelebA1000
 parser.add_argument('--dir1', type=str,
-                    default="/root/autodl-fs/CTCNet-main/result/Helen_x4_LR")  # results_helen results_CelebA
+                    default="result/1_1_1")  # results_helen results_CelebA
 parser.add_argument('--out', type=str, default="./lpips.txt")
 parser.add_argument('--version', type=str, default='0.1')
 parser.add_argument('--use_gpu', action='store_true', help='turn on flag to use GPU')

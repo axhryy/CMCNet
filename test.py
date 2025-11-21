@@ -26,7 +26,7 @@ if __name__ == '__main__':
         save_dir = opt.save_as_dir
     else:
         save_dir = os.path.join(opt.results_dir, opt.name, '{}_{}'.format(opt.phase, opt.epoch))  
-        if opt.load_iter > 0:  # load_iter is 0 by default
+        if opt.load_iter > 0: 
             save_dir = '{:s}_iter{:d}'.format(save_dir, opt.load_iter)
     os.makedirs(save_dir, exist_ok=True)
 
@@ -35,13 +35,8 @@ if __name__ == '__main__':
     network = model.netG
     network.eval()
 
-    # for name, param in network.named_parameters():
-    #     print(name, param.dtype)
-
     for i, data in tqdm(enumerate(dataset), total=len(dataset)):
         inp = data['LR']
-        # print(inp.size())
-        # inp=F.interpolate(inp, [128,128], mode='bicubic')
         with torch.no_grad():
             start_time = time.time()
             output_SR =network(inp)
